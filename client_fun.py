@@ -5,7 +5,7 @@ import thread
 import server_fun
 import socket
 import os
-
+#应该添加上字符串太长的问题
 msg_len=210
 
 def thread_client(client_sock):
