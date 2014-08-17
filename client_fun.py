@@ -36,11 +36,11 @@ def client_server():
         else:
             break
 
-    str_buf=' hello server'
+    str_buf=' hello server'#服务器欢迎语
     msg_buf=server_fun.pack_msg(server_fun.get_time_str(),str_buf,client_name)
     #准备socket通信
     client_sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    client_sock.connect(('127.0.0.1',8080))
+    client_sock.connect((server_ip,server_port))#改写成更灵活的形式
     client_sock.send(msg_buf)#发送握手包
 
     #下面要启动线程用来接收消息
@@ -48,7 +48,7 @@ def client_server():
     
     while True:
         while True:
-            send_str_buf=raw_input('请输入要发送的消息:')
+            send_str_buf=raw_input('请输入要发送的消息:\n')
             if len(send_str_buf)>100:
                 print '你说的话太长了'
             else:
