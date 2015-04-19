@@ -4,6 +4,7 @@
 #单元测试不要忘
 #coding by iamwall 20140816 python 网络聊天室
 # fuck的  一个字符串的问题搞了一下午 原来python中的字符串结束不是\0
+#20140816增加了动态的ip绑定和欢迎信息
 import client_table
 import struct
 import socket
@@ -63,7 +64,7 @@ def start_server():
     #下面准备tcp通信
     server_sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)#获取描述符
     server_sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)#设置端口重用
-    server_sock.bind(('127.0.0.1',8080))#这个地方的ip应该整成可变的
+    server_sock.bind((ip_address,port))#这个地方的ip应该整成可变的
     server_sock.listen(50)
     #主线程维护客户端表 子线程搞定客户端
     while True:
@@ -75,6 +76,10 @@ def start_server():
 
         if server_table.add_client_member(unpack_msg(first_msg)[2],client_connection):
             #这里是将客户端链接成功添加到了客户端表中了  下面该启动线程了
+            #要在这里加上欢迎信息
+            #准备包
+            wecome_msg=pack_msg(get_time_str(),'欢迎:'+unpack_msg(first_msg)[2]+'上线','服务器')
+            send_msg_to_all(wecome_msg,server_table)
             print '为:%s启动线程' %unpack_msg(first_msg)[2]
             print client_address
             #开始启动线程
